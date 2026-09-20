@@ -96,45 +96,20 @@ export const CandidateForm: React.FC<CandidateFormProps> = ({ onSuccess }) => {
         normalization: formattedNorm,
       };
 
-      let candidateResult: CandidateSubmission | null = null;
+      const res = await fetch('/api/candidates', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
 
-      try {
-        const res = await fetch('/api/candidates', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload),
-        });
+      const data = await res.json();
 
-        if (res.ok) {
-          const data = await res.json();
-          if (data.success && data.candidate) {
-            candidateResult = data.candidate;
-          }
-        }
-      } catch (networkErr) {
-        console.warn('Backend API unavailable, using offline client storage:', networkErr);
+      if (!res.ok || !data.success || !data.candidate) {
+        throw new Error(data.message || 'डेटाबेस में सहेजने में विफल। कृपया पुनः प्रयास करें।');
       }
 
-      // Offline / Static fallback for Netlify and direct deployments
-      if (!candidateResult) {
-        const cutoffVal = getCutoffFor(category, gender);
-        const extraVal = extra !== '' ? parseFloat(extra) : calculateExtra(parsedMarks, category, gender);
-        candidateResult = {
-          id: `cand_${Date.now()}_${Math.random().toString(36).substring(2, 6)}`,
-          name: name.trim(),
-          gender,
-          category,
-          shift,
-          marks: parsedMarks,
-          cutoff: cutoffVal,
-          extra: extraVal,
-          normalization: formattedNorm,
-          createdAt: new Date().toISOString(),
-        };
-      }
-
-      onSuccess(candidateResult);
-      setFormSuccess(`अभ्यर्थी ${name.trim()} का डेटा सफलतापूर्वक दर्ज हुआ!`);
+      onSuccess(data.candidate);
+      setFormSuccess(`अभ्यर्थी ${name.trim()} का डेटा डेटाबेस में सफलतापूर्वक दर्ज हुआ!`);
 
       // Reset form
       setName('');
@@ -147,7 +122,7 @@ export const CandidateForm: React.FC<CandidateFormProps> = ({ onSuccess }) => {
         setFormSuccess(null);
       }, 4000);
     } catch (err: any) {
-      setFormError(err.message || 'Submitting failed. Please try again.');
+      setFormError(err.message || 'डेटाबेस में सहेजने में विफल। कृपया पुनः प्रयास करें।');
     } finally {
       setIsSubmitting(false);
     }

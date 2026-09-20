@@ -9,19 +9,15 @@ interface StatsCardsProps {
 export const StatsCards: React.FC<StatsCardsProps> = ({ candidates }) => {
   const total = candidates.length;
 
-  if (total === 0) {
-    return null;
-  }
-
-  const aboveCutoff = candidates.filter((c) => c.extra >= 0).length;
+  const aboveCutoff = total > 0 ? candidates.filter((c) => c.extra >= 0).length : 0;
   const belowCutoff = total - aboveCutoff;
-  const abovePercentage = total > 0 ? ((aboveCutoff / total) * 100).toFixed(1) : '0';
+  const abovePercentage = total > 0 ? ((aboveCutoff / total) * 100).toFixed(1) : '0.0';
 
-  const sumMarks = candidates.reduce((acc, c) => acc + c.marks, 0);
-  const avgMarks = (sumMarks / total).toFixed(2);
+  const sumMarks = total > 0 ? candidates.reduce((acc, c) => acc + c.marks, 0) : 0;
+  const avgMarks = total > 0 ? (sumMarks / total).toFixed(2) : '0.00';
 
-  const highestScore = Math.max(...candidates.map((c) => c.marks));
-  const highestCandidate = candidates.find((c) => c.marks === highestScore);
+  const highestScore = total > 0 ? Math.max(...candidates.map((c) => c.marks)) : 0;
+  const highestCandidate = total > 0 ? candidates.find((c) => c.marks === highestScore) : null;
 
   return (
     <div id="stats-summary-grid" className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-4 w-full max-w-full min-w-0">
