@@ -1,0 +1,6 @@
+{
+  "name": "UP HomeGaurd Shahjahanpur",
+  "description": "Student Score Analysis & Cutoff Portal for UP Home Guard Shahjahanpur Candidates with Real-time Analysis and Cutoff Analytics",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
