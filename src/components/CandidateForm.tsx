@@ -141,9 +141,6 @@ export const CandidateForm: React.FC<CandidateFormProps> = ({ onSuccess }) => {
             </span>
             <span>नया अभ्यर्थी डेटा प्रविष्टि (Candidate Score Entry)</span>
           </h2>
-          <p className="text-xs text-slate-500 mt-0.5">
-            सभी विवरण दर्ज करें • कटऑफ से अतिरिक्त अंतर स्वचालित परिकलित होता है
-          </p>
         </div>
       </div>
 
@@ -177,7 +174,7 @@ export const CandidateForm: React.FC<CandidateFormProps> = ({ onSuccess }) => {
               required
               value={name}
               onChange={(e) => setName(e.target.value)}
-              placeholder="e.g. राहुल कुमार"
+              placeholder="Name"
               className="w-full px-3 py-2 text-xs sm:text-sm bg-slate-50/70 border border-slate-300 rounded-lg focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all font-medium"
             />
           </div>
@@ -232,7 +229,7 @@ export const CandidateForm: React.FC<CandidateFormProps> = ({ onSuccess }) => {
               required
               value={marks}
               onChange={handleMarksChange}
-              placeholder="e.g. 62.50"
+              placeholder="Total Marks"
               className="w-full px-2.5 py-2 text-xs sm:text-sm bg-slate-50/70 border border-slate-300 rounded-lg focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all font-mono font-bold text-blue-900"
             />
           </div>
@@ -321,12 +318,7 @@ export const CandidateForm: React.FC<CandidateFormProps> = ({ onSuccess }) => {
         </div>
 
         {/* Submit Bar */}
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-2">
-          <div className="text-xs text-slate-500 flex items-center gap-1.5">
-            <span className="w-2 h-2 rounded-full bg-blue-600"></span>
-            <span>अंक दर्ज करते ही Cutoff से अंतर Extra कॉलम में स्वतः आ जाएगा • उपयोगकर्ता पुनः भी बदल सकते हैं</span>
-          </div>
-
+        <div className="flex items-center justify-end pt-2">
           <button
             id="btn-submit-candidate"
             type="submit"

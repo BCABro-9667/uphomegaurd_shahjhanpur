@@ -46,7 +46,7 @@ export const Header: React.FC<HeaderProps> = ({ onRefresh, isRefreshing = false 
               <span className="text-[10px] sm:text-[11px] font-bold text-blue-800 tracking-wider uppercase flex items-center gap-1 justify-center sm:justify-start">
                 <MapPin className="w-3 h-3 text-orange-600 shrink-0" /> शाहजहांपुर (UP)
               </span>
-              <h1 className="text-base sm:text-lg font-black text-slate-900 tracking-tight leading-snug">
+              <h1 className="text-lg sm:text-xl md:text-2xl font-black text-slate-900 tracking-tight leading-tight">
                 <span className="text-blue-950">UP HomeGaurd</span>{' '}
                 <span className="text-orange-600">Shahjahanpur</span>
               </h1>

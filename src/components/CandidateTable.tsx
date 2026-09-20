@@ -173,7 +173,7 @@ export const CandidateTable: React.FC<CandidateTableProps> = ({ candidates }) =>
     );
 
     const head = [
-      ['#', 'Candidate Name', 'Gender', 'Category', 'Shift', 'Marks', 'Cutoff', 'Extra Marks', 'Normalization', 'Status']
+      ['#', 'Candidate Name', 'Gender', 'Category', 'Shift', 'Marks', 'Cutoff', 'Extra Marks', 'Normalization']
     ];
 
     const body = sortedCandidates.map((c, idx) => [
@@ -186,7 +186,6 @@ export const CandidateTable: React.FC<CandidateTableProps> = ({ candidates }) =>
       Number(c.cutoff).toFixed(5),
       (c.extra >= 0 ? '+' : '') + Number(c.extra).toFixed(4),
       c.normalization || '0.00',
-      c.extra >= 0 ? 'Qualified' : 'Below Cutoff',
     ]);
 
     autoTable(doc, {
@@ -708,17 +707,13 @@ export const CandidateTable: React.FC<CandidateTableProps> = ({ candidates }) =>
                 <span>नॉर्मलाइजेशन</span>
                 {getSortIcon('normalization')}
               </th>
-
-              <th className="py-3 px-3 text-center">
-                <span>स्थिति (Status)</span>
-              </th>
             </tr>
           </thead>
 
           <tbody className="divide-y divide-slate-100 font-medium text-slate-700">
             {paginatedCandidates.length === 0 ? (
               <tr>
-                <td colSpan={10} className="py-10 text-center text-slate-400">
+                <td colSpan={9} className="py-10 text-center text-slate-400">
                   <div className="flex flex-col items-center justify-center gap-2">
                     <ListFilter className="w-8 h-8 text-slate-300" />
                     <p className="font-semibold text-slate-600">कोई अभ्यर्थी डेटा नहीं मिला</p>
@@ -810,17 +805,6 @@ export const CandidateTable: React.FC<CandidateTableProps> = ({ candidates }) =>
                           if (isNaN(num)) return '0.00';
                           return num > 0 ? `+${num.toFixed(2)}` : num.toFixed(2);
                         })()}
-                      </span>
-                    </td>
-
-                    {/* Status Badge */}
-                    <td className="py-3 px-3 text-center">
-                      <span className={`inline-block px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wide ${
-                        isAboveCutoff
-                          ? 'bg-emerald-500 text-white'
-                          : 'bg-rose-500 text-white'
-                      }`}>
-                        {isAboveCutoff ? 'Qualified' : 'Below Cutoff'}
                       </span>
                     </td>
                   </tr>

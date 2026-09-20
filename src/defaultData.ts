@@ -1,5 +1,3 @@
 import { CandidateSubmission } from './types';
 
-export const INITIAL_CANDIDATES: CandidateSubmission[] = [
-]
-];
+export const INITIAL_CANDIDATES: CandidateSubmission[] = [];
