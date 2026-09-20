@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { CandidateSubmission } from './types';
+import { INITIAL_CANDIDATES } from './defaultData';
 import { Header } from './components/Header';
 import { CandidateForm } from './components/CandidateForm';
 import { StatsCards } from './components/StatsCards';
@@ -7,25 +8,51 @@ import { CandidateTable } from './components/CandidateTable';
 import { WhatsAppButton } from './components/WhatsAppButton';
 import { CheckCircle } from 'lucide-react';
 
-export default function App() {
-  const [candidates, setCandidates] = useState<CandidateSubmission[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
-  const [dbStatus, setDbStatus] = useState<string>('Connecting...');
+const STORAGE_KEY = 'up_homeguard_candidates_data';
 
-  // Fetch candidates from backend (with in-memory cache speed)
+export default function App() {
+  const [candidates, setCandidates] = useState<CandidateSubmission[]>(() => {
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          return parsed;
+        }
+      }
+    } catch {
+      // ignore
+    }
+    return INITIAL_CANDIDATES;
+  });
+
+  const [loading, setLoading] = useState<boolean>(false);
+  const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
+  const [dbStatus, setDbStatus] = useState<string>('Live Portal Active');
+
+  // Save to localStorage whenever candidates state changes
+  useEffect(() => {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(candidates));
+    } catch {
+      // ignore
+    }
+  }, [candidates]);
+
+  // Fetch candidates from backend (with in-memory cache speed and offline fallback)
   const fetchCandidates = useCallback(async (showRefreshingSpinner = false) => {
     if (showRefreshingSpinner) setIsRefreshing(true);
     try {
       const res = await fetch('/api/candidates');
-      if (!res.ok) throw new Error('Failed to fetch data');
+      if (!res.ok) throw new Error('Backend API not responding');
       const data = await res.json();
       if (data.success && Array.isArray(data.candidates)) {
         setCandidates(data.candidates);
         setDbStatus(data.dbConnected ? 'MongoDB Atlas Live' : 'High-Speed Memory Cache Active');
       }
     } catch (err) {
-      console.warn('Network error fetching candidates:', err);
+      // In case of static Netlify deploy or offline mode, keep existing local data
+      setDbStatus('High-Speed Local Storage Active');
     } finally {
       setLoading(false);
       if (showRefreshingSpinner) {
@@ -34,7 +61,7 @@ export default function App() {
     }
   }, []);
 
-  // Initial fetch and continuous live polling (every 5 seconds) for real-time live data without reloading
+  // Initial fetch and continuous live polling (every 5 seconds)
   useEffect(() => {
     fetchCandidates();
     const interval = setInterval(() => {
